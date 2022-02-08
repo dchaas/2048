@@ -1,0 +1,94 @@
+body {
+  text-align: center;
+  background-color: rgb(241, 241, 235);
+}
+
+h1 {
+  font-family: Impact;
+  font-size: 80px;
+  padding-bottom: 0em;
+  margin-bottom: 0em;
+}
+
+h4 {
+  font-family: fantasy;
+  font-style: italic;
+  padding-top: 0em;
+  margin-top: 0em;
+}
+
+span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  font-family: Impact;
+  color: darkslategray;
+}
+
+.game-board {
+  text-align: center;
+  margin: auto;
+  position: relative;
+  justify-content: center;
+  float: none;
+  border: 5px;
+  border-radius: 5px;
+  background-color: rgb(173, 173, 165);
+  width: 500px;
+  height: 500px;
+}
+
+.empty-space {
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  background-color: rgb(214, 197, 170);
+  margin: 12.5px;
+  float: left;
+  border-radius: 5px;
+  border: 5px;
+  font-size: 50px;
+}
+
+.two {
+  background-color: rgb(255, 240, 1);
+}
+
+.four {
+  background-color: rgb(255, 215, 2);
+}
+
+.eight {
+  background-color: rgb(255, 190, 3);
+}
+
+.sixteen {
+  background-color: rgb(255, 165, 1);
+}
+
+.thirtytwo {
+  background-color: rgb(255, 140, 4);
+}
+
+.sixtyfour {
+  background-color: rgb(255, 115, 5);
+}
+
+.onetwentyeight {
+  background-color: rgb(255, 90, 5);
+}
+
+.twofiftysix {
+  background-color: rgb(255, 65, 4);
+}
+
+.fivetwelve {
+  background-color: rgb(255, 40, 4);
+}
+.tentwentyfour {
+  background-color: rgb(255, 15, 4);
+}
+.twentyfortyeight {
+  background-color: rgb(255, 0, 0);
+  color: white;
+}
