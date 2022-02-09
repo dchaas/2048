@@ -35,22 +35,37 @@ let numberMap = new Map([
   [2048, 'twentyfortyeight'],
 ]);
 
-function removeZeros(bm, ab) {
-  for (let j = 0; j < 3; j++) {
-    let space = bm[i][j];
-    let spacep1 = bm[i][j + 1];
-    if (ab[space] === 0) {
-      ab[space] = ab[spacep1];
-      ab[spacep1] = 0;
+function removeZerosLeftRight(bm, ab, i, asc) {
+  let loop = asc ? [0, 1, 2] : [3, 2, 1];
+
+  loop.forEach(e => {
+    let space = bm[i][e];
+    let spacep1 = bm[i][e + (loop[1] - loop[0])];
+    if (ab[spacep1] === 0) {
+      ab[spacep1] = ab[space];
+      ab[space] = 0;
     }
-  }
+  });
+}
+
+function removeZerosUpDown(bm, ab, j, asc) {
+  let loop = asc ? [0, 1, 2] : [3, 2, 1];
+
+  loop.forEach(e => {
+    let space = bm[e][j];
+    let spacep1 = bm[e + (loop[1] - loop[0])][j];
+    if (ab[spacep1] === 0) {
+      ab[spacep1] = ab[space];
+      ab[space] = 0;
+    }
+  });
 }
 
 function moveLeft() {
   for (let i = 0; i < 4; i++) {
     // pass 1a and 1b - remove zeros
-    removeZeros(boardMap, activeBoard);
-    removeZeros(boardMap, activeBoard);
+    removeZerosLeftRight(boardMap, activeBoard, i, false);
+    removeZerosLeftRight(boardMap, activeBoard, i, false);
     // for (let j = 0; j < 3; j++) {
     //   let space = boardMap[i][j];
     //   let spacep1 = boardMap[i][j + 1];
@@ -68,17 +83,19 @@ function moveLeft() {
         activeBoard[spacep1] += activeBoard[space];
         activeBoard[space] = 0;
       }
-
-      // pass 3 - move fully left
-      for (let j = 3; j > 0; j--) {
-        let space = boardMap[i][j];
-        let spacep1 = boardMap[i][j - 1];
-        if (activeBoard[spacep1] === 0) {
-          activeBoard[spacep1] = activeBoard[space];
-          activeBoard[space] = 0;
-        }
-      }
     }
+
+    // pass 3 - move fully left
+    removeZerosLeftRight(boardMap, activeBoard, i, false);
+    removeZerosLeftRight(boardMap, activeBoard, i, false);
+    // for (let j = 3; j > 0; j--) {
+    //   let space = boardMap[i][j];
+    //   let spacep1 = boardMap[i][j - 1];
+    //   if (activeBoard[spacep1] === 0) {
+    //     activeBoard[spacep1] = activeBoard[space];
+    //     activeBoard[space] = 0;
+    //   }
+    // }
   }
 
   // update the game board
@@ -89,15 +106,17 @@ function moveLeft() {
 
 function moveRight() {
   for (let i = 0; i < 4; i++) {
-    // pass 1 - remove zeros
-    for (let j = 0; j < 3; j++) {
-      let space = boardMap[i][j];
-      let spacep1 = boardMap[i][j + 1];
-      if (activeBoard[spacep1] === 0) {
-        activeBoard[spacep1] = activeBoard[space];
-        activeBoard[space] = 0;
-      }
-    }
+    // pass 1a and 1b - remove zeros
+    removeZerosLeftRight(boardMap, activeBoard, i, true);
+    removeZerosLeftRight(boardMap, activeBoard, i, true);
+    // for (let j = 0; j < 3; j++) {
+    //   let space = boardMap[i][j];
+    //   let spacep1 = boardMap[i][j + 1];
+    //   if (activeBoard[spacep1] === 0) {
+    //     activeBoard[spacep1] = activeBoard[space];
+    //     activeBoard[space] = 0;
+    //   }
+    // }
 
     // pass 2 - merge matches
     for (let j = 3; j > 0; j--) {
@@ -108,15 +127,17 @@ function moveRight() {
         activeBoard[space] = 0;
       }
 
-      // pass 3 - move fully left
-      for (let j = 0; j < 3; j++) {
-        let space = boardMap[i][j];
-        let spacep1 = boardMap[i][j + 1];
-        if (activeBoard[spacep1] === 0) {
-          activeBoard[spacep1] = activeBoard[space];
-          activeBoard[space] = 0;
-        }
-      }
+      // pass 3a and 3b - remove zeros
+      removeZerosLeftRight(boardMap, activeBoard, i, true);
+      removeZerosLeftRight(boardMap, activeBoard, i, true);
+      // for (let j = 0; j < 3; j++) {
+      //   let space = boardMap[i][j];
+      //   let spacep1 = boardMap[i][j + 1];
+      //   if (activeBoard[spacep1] === 0) {
+      //     activeBoard[spacep1] = activeBoard[space];
+      //     activeBoard[space] = 0;
+      //   }
+      // }
     }
   }
 
@@ -128,15 +149,18 @@ function moveRight() {
 
 function moveUp() {
   for (let j = 0; j < 4; j++) {
-    // pass 1 - remove zeros
-    for (let i = 3; i > 0; i--) {
-      let space = boardMap[i][j];
-      let spacep1 = boardMap[i - 1][j];
-      if (activeBoard[spacep1] === 0) {
-        activeBoard[spacep1] = activeBoard[space];
-        activeBoard[space] = 0;
-      }
-    }
+    // pass 1a and 1b - remove zeros
+    removeZerosUpDown(boardMap, activeBoard, j, false);
+    removeZerosUpDown(boardMap, activeBoard, j, false);
+
+    // for (let i = 3; i > 0; i--) {
+    //   let space = boardMap[i][j];
+    //   let spacep1 = boardMap[i - 1][j];
+    //   if (activeBoard[spacep1] === 0) {
+    //     activeBoard[spacep1] = activeBoard[space];
+    //     activeBoard[space] = 0;
+    //   }
+    // }
 
     // pass 2 - merge matches
     for (let i = 0; i < 3; i++) {
@@ -147,15 +171,18 @@ function moveUp() {
         activeBoard[space] = 0;
       }
 
-      // pass 3 - move fully left
-      for (let i = 3; i > 0; i--) {
-        let space = boardMap[i][j];
-        let spacep1 = boardMap[i - 1][j];
-        if (activeBoard[spacep1] === 0) {
-          activeBoard[spacep1] = activeBoard[space];
-          activeBoard[space] = 0;
-        }
-      }
+      // pass 3a and 3b - remove zeros
+      removeZerosUpDown(boardMap, activeBoard, j, false);
+      removeZerosUpDown(boardMap, activeBoard, j, false);
+
+      // for (let i = 3; i > 0; i--) {
+      //   let space = boardMap[i][j];
+      //   let spacep1 = boardMap[i - 1][j];
+      //   if (activeBoard[spacep1] === 0) {
+      //     activeBoard[spacep1] = activeBoard[space];
+      //     activeBoard[space] = 0;
+      //   }
+      // }
     }
   }
 
@@ -167,15 +194,18 @@ function moveUp() {
 
 function moveDown() {
   for (let j = 0; j < 4; j++) {
-    // pass 1 - remove zeros
-    for (let i = 0; i < 3; i++) {
-      let space = boardMap[i][j];
-      let spacep1 = boardMap[i + 1][j];
-      if (activeBoard[spacep1] === 0) {
-        activeBoard[spacep1] = activeBoard[space];
-        activeBoard[space] = 0;
-      }
-    }
+    // pass 1a and 1b - remove zeros
+    removeZerosUpDown(boardMap, activeBoard, j, true);
+    removeZerosUpDown(boardMap, activeBoard, j, true);
+
+    // for (let i = 0; i < 3; i++) {
+    //   let space = boardMap[i][j];
+    //   let spacep1 = boardMap[i + 1][j];
+    //   if (activeBoard[spacep1] === 0) {
+    //     activeBoard[spacep1] = activeBoard[space];
+    //     activeBoard[space] = 0;
+    //   }
+    // }
 
     // pass 2 - merge matches
     for (let i = 3; i > 0; i--) {
@@ -186,15 +216,18 @@ function moveDown() {
         activeBoard[space] = 0;
       }
 
-      // pass 3 - move fully left
-      for (let i = 0; i < 3; i++) {
-        let space = boardMap[i][j];
-        let spacep1 = boardMap[i + 1][j];
-        if (activeBoard[spacep1] === 0) {
-          activeBoard[spacep1] = activeBoard[space];
-          activeBoard[space] = 0;
-        }
-      }
+      // pass 3a and 3b - move fully left
+      removeZerosUpDown(boardMap, activeBoard, j, true);
+      removeZerosUpDown(boardMap, activeBoard, j, true);
+
+      // for (let i = 0; i < 3; i++) {
+      //   let space = boardMap[i][j];
+      //   let spacep1 = boardMap[i + 1][j];
+      //   if (activeBoard[spacep1] === 0) {
+      //     activeBoard[spacep1] = activeBoard[space];
+      //     activeBoard[space] = 0;
+      //   }
+      // }
     }
   }
 
