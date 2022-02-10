@@ -1,3 +1,5 @@
+// initial setup and variables
+
 document.addEventListener('keyup', e => {
   console.log(e);
   if (e.key === 'ArrowLeft') {
@@ -21,6 +23,20 @@ let boardMap = [
   [12, 13, 14, 15],
 ];
 
+for (let i = 0; i <= 15; i++) {
+  gameBoard.push(document.querySelector(`#d${i}`));
+}
+
+const scoreSPAN = document.querySelector('#score');
+let score = 0;
+const hiscoreSPAN = document.querySelector('#hiscore');
+let hiscore = 0;
+
+const newGameBtn = document.querySelector('.newgame');
+newGameBtn.addEventListener('click', initGame);
+
+const result = document.querySelector('#title');
+
 let numberMap = new Map([
   [2, 'two'],
   [4, 'four'],
@@ -34,6 +50,8 @@ let numberMap = new Map([
   [1024, 'tentwentyfour'],
   [2048, 'twentyfortyeight'],
 ]);
+
+// key movement functionality
 
 function removeZerosLeftRight(bm, ab, i, asc) {
   let loop = asc ? [0, 1, 2] : [3, 2, 1];
@@ -61,19 +79,20 @@ function removeZerosUpDown(bm, ab, j, asc) {
   });
 }
 
+function updateScore(amnt) {
+  score += amnt;
+  scoreSPAN.textContent = score;
+  if (score > hiscore) {
+    hiscore = score;
+    hiscoreSPAN.textContent = hiscore;
+  }
+}
+
 function moveLeft() {
   for (let i = 0; i < 4; i++) {
     // pass 1a and 1b - remove zeros
     removeZerosLeftRight(boardMap, activeBoard, i, false);
     removeZerosLeftRight(boardMap, activeBoard, i, false);
-    // for (let j = 0; j < 3; j++) {
-    //   let space = boardMap[i][j];
-    //   let spacep1 = boardMap[i][j + 1];
-    //   if (activeBoard[space] === 0) {
-    //     activeBoard[space] = activeBoard[spacep1];
-    //     activeBoard[spacep1] = 0;
-    //   }
-    // }
 
     // pass 2 - merge matches
     for (let j = 0; j < 3; j++) {
@@ -82,20 +101,14 @@ function moveLeft() {
       if (activeBoard[space] === activeBoard[spacep1]) {
         activeBoard[spacep1] += activeBoard[space];
         activeBoard[space] = 0;
+        // add up the score
+        updateScore(activeBoard[spacep1]);
       }
     }
 
     // pass 3 - move fully left
     removeZerosLeftRight(boardMap, activeBoard, i, false);
     removeZerosLeftRight(boardMap, activeBoard, i, false);
-    // for (let j = 3; j > 0; j--) {
-    //   let space = boardMap[i][j];
-    //   let spacep1 = boardMap[i][j - 1];
-    //   if (activeBoard[spacep1] === 0) {
-    //     activeBoard[spacep1] = activeBoard[space];
-    //     activeBoard[space] = 0;
-    //   }
-    // }
   }
 
   // update the game board
@@ -109,14 +122,6 @@ function moveRight() {
     // pass 1a and 1b - remove zeros
     removeZerosLeftRight(boardMap, activeBoard, i, true);
     removeZerosLeftRight(boardMap, activeBoard, i, true);
-    // for (let j = 0; j < 3; j++) {
-    //   let space = boardMap[i][j];
-    //   let spacep1 = boardMap[i][j + 1];
-    //   if (activeBoard[spacep1] === 0) {
-    //     activeBoard[spacep1] = activeBoard[space];
-    //     activeBoard[space] = 0;
-    //   }
-    // }
 
     // pass 2 - merge matches
     for (let j = 3; j > 0; j--) {
@@ -125,19 +130,13 @@ function moveRight() {
       if (activeBoard[space] === activeBoard[spacep1]) {
         activeBoard[spacep1] += activeBoard[space];
         activeBoard[space] = 0;
+        // add up the score
+        updateScore(activeBoard[spacep1]);
       }
 
       // pass 3a and 3b - remove zeros
       removeZerosLeftRight(boardMap, activeBoard, i, true);
       removeZerosLeftRight(boardMap, activeBoard, i, true);
-      // for (let j = 0; j < 3; j++) {
-      //   let space = boardMap[i][j];
-      //   let spacep1 = boardMap[i][j + 1];
-      //   if (activeBoard[spacep1] === 0) {
-      //     activeBoard[spacep1] = activeBoard[space];
-      //     activeBoard[space] = 0;
-      //   }
-      // }
     }
   }
 
@@ -153,15 +152,6 @@ function moveUp() {
     removeZerosUpDown(boardMap, activeBoard, j, false);
     removeZerosUpDown(boardMap, activeBoard, j, false);
 
-    // for (let i = 3; i > 0; i--) {
-    //   let space = boardMap[i][j];
-    //   let spacep1 = boardMap[i - 1][j];
-    //   if (activeBoard[spacep1] === 0) {
-    //     activeBoard[spacep1] = activeBoard[space];
-    //     activeBoard[space] = 0;
-    //   }
-    // }
-
     // pass 2 - merge matches
     for (let i = 0; i < 3; i++) {
       let space = boardMap[i][j];
@@ -169,20 +159,13 @@ function moveUp() {
       if (activeBoard[space] === activeBoard[spacep1]) {
         activeBoard[spacep1] += activeBoard[space];
         activeBoard[space] = 0;
+        // add up the score
+        updateScore(activeBoard[spacep1]);
       }
 
       // pass 3a and 3b - remove zeros
       removeZerosUpDown(boardMap, activeBoard, j, false);
       removeZerosUpDown(boardMap, activeBoard, j, false);
-
-      // for (let i = 3; i > 0; i--) {
-      //   let space = boardMap[i][j];
-      //   let spacep1 = boardMap[i - 1][j];
-      //   if (activeBoard[spacep1] === 0) {
-      //     activeBoard[spacep1] = activeBoard[space];
-      //     activeBoard[space] = 0;
-      //   }
-      // }
     }
   }
 
@@ -198,15 +181,6 @@ function moveDown() {
     removeZerosUpDown(boardMap, activeBoard, j, true);
     removeZerosUpDown(boardMap, activeBoard, j, true);
 
-    // for (let i = 0; i < 3; i++) {
-    //   let space = boardMap[i][j];
-    //   let spacep1 = boardMap[i + 1][j];
-    //   if (activeBoard[spacep1] === 0) {
-    //     activeBoard[spacep1] = activeBoard[space];
-    //     activeBoard[space] = 0;
-    //   }
-    // }
-
     // pass 2 - merge matches
     for (let i = 3; i > 0; i--) {
       let space = boardMap[i][j];
@@ -214,20 +188,13 @@ function moveDown() {
       if (activeBoard[space] === activeBoard[spacep1]) {
         activeBoard[spacep1] += activeBoard[space];
         activeBoard[space] = 0;
+        // add up the score
+        updateScore(activeBoard[spacep1]);
       }
 
       // pass 3a and 3b - move fully left
       removeZerosUpDown(boardMap, activeBoard, j, true);
       removeZerosUpDown(boardMap, activeBoard, j, true);
-
-      // for (let i = 0; i < 3; i++) {
-      //   let space = boardMap[i][j];
-      //   let spacep1 = boardMap[i + 1][j];
-      //   if (activeBoard[spacep1] === 0) {
-      //     activeBoard[spacep1] = activeBoard[space];
-      //     activeBoard[space] = 0;
-      //   }
-      // }
     }
   }
 
@@ -237,9 +204,7 @@ function moveDown() {
   updateBoard();
 }
 
-for (let i = 0; i <= 15; i++) {
-  gameBoard.push(document.querySelector(`#d${i}`));
-}
+// logic for updating the display
 
 // get a random number, either 2 or 4
 function getNewNumber() {
@@ -269,6 +234,9 @@ function updateBoard() {
       gameBoard[index].className = 'empty-space';
     }
   });
+
+  // check for win or loss
+  gameState();
 }
 
 function findOpenSpaces() {
@@ -280,10 +248,34 @@ function findOpenSpaces() {
   });
 }
 
+// check for win or loss
+function gameState() {
+  // get max number
+  let max = 0;
+  activeBoard.forEach(e => {
+    if (e > max) {
+      max = e;
+    }
+  });
+  if ((openSpaces.length === 0) & (max < 2048)) {
+    result.textContent = 'GAME OVER';
+    result.className = 'lose';
+  } else if (max == 2048) {
+    result.textContent = 'YOU WIN!';
+    result.className = 'win';
+  } else {
+    result.textContent = '2048';
+    result.className = '';
+  }
+}
+
 // game initialization
 function initGame() {
   openSpaces = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
   activeBoard = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+  score = 0;
+  updateScore(0);
 
   // get the first two spaces filled in
   placeNewNumber(openSpaces);

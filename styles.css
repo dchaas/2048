@@ -10,6 +10,14 @@ h1 {
   margin-bottom: 0em;
 }
 
+.lose {
+  color: red;
+}
+
+.win {
+  color: green;
+}
+
 h4 {
   font-family: fantasy;
   font-style: italic;
@@ -23,6 +31,16 @@ span {
   line-height: normal;
   font-family: Impact;
   color: darkslategray;
+}
+
+#score {
+  font-family: Arial;
+  color: black;
+}
+
+#hiscore {
+  font-family: Arial;
+  color: black;
 }
 
 .game-board {
